@@ -3,12 +3,13 @@
 // Basic fork() semantics
 //
 // Build
-//  clang -std=c11 -Wall -o fork1.out fork1.c
+//  gcc -std=gnu11 -Wall -o fork1.out fork1.c
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/types.h>  // pid_t
+#include <sys/types.h> 
 
 #define STATUS_SUCCESS  0x0
 #define STATUS_FAILURE  0x1
