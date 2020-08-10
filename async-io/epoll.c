@@ -1,4 +1,4 @@
-// epoll1.c
+// epoll.c
 // Basic epoll example.
 //
 // Build
