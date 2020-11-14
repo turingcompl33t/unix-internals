@@ -1,14 +1,13 @@
 // dup.c
 //
 // File descriptor duplication with dup()
-//
-// Build
-//  clang -o dup.out -std=c11 -Wall dup.c
 
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <assert.h>
+
+#include "core.h"
 
 // 10 chars
 char buffer[] = "abcde12345";
@@ -18,8 +17,7 @@ int main(void)
     int fd1;
     if ((fd1 = open("test.txt", O_WRONLY | O_CREAT | O_TRUNC)) == -1)
     {
-        puts("open() failed");
-        return 1;
+        error_exit("open");
     }
 
     // duplicate the existing fd
@@ -31,8 +29,7 @@ int main(void)
 
     if (write(fd1, buffer, 10) != 10)
     {
-        puts("write() failed");
-        return 1;
+        error_exit("write()");
     }
 
     // current position = 10
@@ -41,8 +38,7 @@ int main(void)
 
     if (write(fd2, buffer, 10) != 10)
     {
-        puts("write() failed");
-        return 1;
+        error_exit("write()");
     }
 
     // current position = 20
@@ -54,5 +50,5 @@ int main(void)
 
     unlink("test.txt");
 
-    return 0;
+    return EXIT_SUCCESS;
 }
