@@ -1,14 +1,12 @@
 // fork1.c
 //
 // Basic fork() semantics
-//
-// Build
-//  gcc -std=c11 -Wall -o fork1.out fork1.c
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/types.h>  // pid_t
+#include <sys/types.h> 
 
 static int idata = 111;
 
