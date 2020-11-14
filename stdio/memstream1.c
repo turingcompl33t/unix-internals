@@ -1,11 +1,9 @@
 // memstream1.c
 //
 // Basic usage of Standard IO memory streams.
-//
-// Build
-//  clang -o memstream1.out -std=c11 -Wall memstream1.c
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define BUFSIZE 48
@@ -54,5 +52,5 @@ int main(void)
     printf("after close: %s\n", buffer);
     printf("len of string in buffer = %ld\n", (long)strlen(buffer));
 
-    return 0;
+    return EXIT_SUCCESS;
 }
