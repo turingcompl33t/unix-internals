@@ -3,15 +3,12 @@
 // Basic fork() semantics
 //
 // Build
-//  clang -std=c11 -Wall -o fork1.out fork1.c
+//  gcc -std=c11 -Wall -o fork1.out fork1.c
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>  // pid_t
-
-#define STATUS_SUCCESS  0x0
-#define STATUS_FAILURE  0x1
 
 static int idata = 111;
 
@@ -25,7 +22,7 @@ int main()
     {
     case -1:
         printf("fork() failed\n");
-        return STATUS_FAILURE;
+        return EXIT_FAILURE;
     case 0:
         // child process
         idata *= 3;
@@ -45,5 +42,5 @@ int main()
         (long)getpid(), id,
         idata, istack);
 
-    exit(STATUS_SUCCESS);
+    return EXIT_SUCCESS;
 }

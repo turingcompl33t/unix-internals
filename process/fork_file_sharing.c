@@ -1,9 +1,6 @@
 // fork_file_sharing.c
 //
 // Demo of file-sharing semantics with fork()
-//
-// Build
-//  clang -std=c11 -Wall -I$UNIX_WORKSPACE/common -o fork_file_sharing.out fork_file_sharing.c $UNIX_WORKSPACE/common/error.c
 
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -12,7 +9,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include <core.h>
+#include "core.h"
 
 int main()
 {
