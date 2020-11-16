@@ -23,6 +23,9 @@ signalfd2: common
 signalfd3: common
 	$(CC) $(CFLAGS) -o signalfd3 -I$(LOCAL_HDRS) signalfd3.c $(LOCAL_LIBS)/common.a
 
+signalfd4: common
+	$(CC) $(CFLAGS) -o signalfd4 -I$(LOCAL_HDRS) signalfd4.c $(LOCAL_LIBS)/common.a
+
 common:
 	$(MAKE) -C $(LOCAL_LIBS)
 
@@ -33,6 +36,7 @@ clean:
 	rm -f signalfd1
 	rm -f signalfd2
 	rm -f signalfd3
+	rm -f signalfd4
 	$(MAKE) -C $(LOCAL_LIBS) clean
 
 
