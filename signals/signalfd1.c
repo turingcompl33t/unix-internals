@@ -2,6 +2,7 @@
 //
 // Synchronously waiting for signals with signalfd().
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 
