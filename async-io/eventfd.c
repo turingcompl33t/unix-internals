@@ -1,9 +1,8 @@
 // eventfd.c
-// Multiplexing arbitrary event notification with eventfd and epoll.
 //
-// Build
-//  gcc -Wall -Werror -std=gnu11 eventfd.c -o eventfd.out
+// Multiplexing arbitrary event notification with eventfd and epoll.
 
+#define _GNU_SOURCE
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +53,7 @@ void reactor(const int ioc, const int n_reps)
 
 int main(int argc, char* argv[])
 {
-    // yes, I realize atoi() suboptimal
+    // yes, I realize atoi() is suboptimal
     int const n_reps = (argc > 1) 
         ? atoi(argv[1]) 
         : DEFAULT_N_REPS;

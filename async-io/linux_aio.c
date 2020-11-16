@@ -3,9 +3,6 @@
 // NOTE: run strace -T on the program to observe the blocking
 // nature of io_submit() when used on a regular file without
 // the O_DIRECT flag specified on the file descriptor.
-//
-// Build
-//  gcc -Wall -Werror -std=gnu11 linux_aio.c -o linux_aio.out
 
 #include <stdio.h>
 #include <errno.h>
@@ -81,7 +78,7 @@ int main(void)
         fatal_error("io_submit()");
     }
 
-    struct io_event events[1] = {};
+    struct io_event events[1] = { 0 };
     status = io_getevents(ctx, 1, 1, events, NULL);
     if (-1 == status)
     {

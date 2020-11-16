@@ -1,11 +1,8 @@
-// epoll.c
-// Basic epoll example.
+// epoll1.c
 //
-// Build
-//  gcc -Wall -Werror -std=gnu11 epoll1.c -o epoll1.out -pthread
+// Basic epoll example.
 
 #define _GNU_SOURCE
-
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
