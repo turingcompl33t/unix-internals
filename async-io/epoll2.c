@@ -29,7 +29,7 @@ int main(void)
     }
 
     flags |= O_NONBLOCK;
-    if (-1 == fcntl(STDIN_FILENO, F_SETFL))
+    if (-1 == fcntl(STDIN_FILENO, F_SETFL, flags))
     {
         error_exit("fcntl()");
     }
