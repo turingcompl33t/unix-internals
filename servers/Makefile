@@ -20,6 +20,9 @@ forking: common
 preforking: common
 	$(CC) $(CFLAGS) -o preforking -I$(LOCAL_HDRS) preforking.c util.c $(LOCAL_LIBS)/common.a
 
+threaded: common
+	$(CC) $(CFLAGS) -o threaded -pthread -I$(LOCAL_HDRS) threaded.c util.c $(LOCAL_LIBS)/common.a
+
 common:
 	$(MAKE) -C $(LOCAL_LIBS)
 
@@ -29,7 +32,7 @@ clean:
 	rm -f iterative
 	rm -f forking
 	rm -f preforking
+	rm -f threaded
 	$(MAKE) -C $(LOCAL_LIBS) clean
-
 
 .PHONY: clean
