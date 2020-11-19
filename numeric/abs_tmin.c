@@ -1,5 +1,8 @@
 // abs_tmin.c
+//
+// Taking the absolute value of the minimum signed 321-bit integer.
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -12,5 +15,5 @@ int main(void)
     printf("INT_MIN      = %d\n", min);
     printf("abs(INT_MIN) = %d\n", res);
 
-    return 0; 
+    return EXIT_SUCCESS; 
 }
