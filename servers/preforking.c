@@ -1,4 +1,4 @@
-// preforking1.c
+// preforking.c
 //
 // A concurrent echo server with a pre-forked process pool.
 //
