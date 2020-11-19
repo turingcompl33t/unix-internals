@@ -17,6 +17,9 @@ iterative: common
 forking: common
 	$(CC) $(CFLAGS) -o forking -I$(LOCAL_HDRS) forking.c util.c $(LOCAL_LIBS)/common.a
 
+preforking1: common
+	$(CC) $(CFLAGS) -o preforking1 -I$(LOCAL_HDRS) preforking1.c util.c $(LOCAL_LIBS)/common.a
+
 common:
 	$(MAKE) -C $(LOCAL_LIBS)
 
@@ -25,6 +28,7 @@ clean:
 	rm -f client
 	rm -f iterative
 	rm -f forking
+	rm -f preforking1
 	$(MAKE) -C $(LOCAL_LIBS) clean
 
 
