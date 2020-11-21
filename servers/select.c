@@ -1,6 +1,8 @@
 // select.c
 //
 // A concurrent echo server implemented with a select()-based event loop.
+//
+// Adapted from the implementation provided in CS:APP Chapter 12.2.
 
 #define _GNU_SOURCE
 #include <fcntl.h>
@@ -18,6 +20,27 @@
 
 #define BUFSIZE 256
 
+typedef struct server_ctx
+{
+    // The largest descriptor in the read set
+    int maxfd; 
+
+    // Set of interest descriptors
+    fd_set read_set;
+
+    // Set of ready descriptors
+    fd_set ready_set;
+
+    // Number of ready descriptors
+    int nready;
+
+    // High water mark index into fd array
+    int maxi;
+
+    // Static array of client fds
+    int clientfd[FD_SETSIZE];
+} server_ctx_t;
+
 static void set_nonblocking(int fd)
 {
     int flags = fcntl(fd, F_GETFL);
@@ -33,78 +56,83 @@ static void set_nonblocking(int fd)
     }
 }
 
-static int handle_accept_ready(int fd)
+static void initialize_server_ctx(server_ctx_t* ctx, int sfd)
 {
-    socklen_t addrlen;
-    struct sockaddr_in addr;
-    memset(&addr, 0, sizeof(struct sockaddr_in));
-
-    int cfd = accept(fd, (struct sockaddr*)&addr, &addrlen);
-    if (-1 == cfd)
+    ctx->maxi = -1;
+    for (int i = 0; i < FD_SETSIZE; ++i)
     {
-        error_exit("accept()");
+        ctx->clientfd[i] = -1;
     }
 
-    printf("[+] Accepted new connection\n");
-
-    set_nonblocking(cfd);
-    return cfd;
+    // add the server fd to the read set
+    ctx->maxfd = sfd;
+    FD_ZERO(&ctx->read_set);
+    FD_SET(sfd, &ctx->read_set);
 }
 
-static bool handle_read_ready(int fd)
+static void add_client(int cfd, server_ctx_t* ctx)
 {
+    int i;
+    ctx->nready--;
+    for (i = 0; i < FD_SETSIZE; ++i)
+    {
+        if (ctx->clientfd[i] < 0)
+        {
+            // add a connected descriptor to the set
+            set_nonblocking(cfd);
+            ctx->clientfd[i] = cfd;
+            FD_SET(cfd, &ctx->read_set);
+            ctx->maxfd = max(cfd, ctx->maxfd);
+            ctx->maxi = max(i, ctx->maxi);
+            break;
+        }
+    }
+
+    if (i == FD_SETSIZE)
+    {
+        error_exit("too many clients");
+    }
+
+    printf("[+] Accepted new client connection\n");
+}
+
+static void process_ready_clients(server_ctx_t* ctx)
+{
+    ssize_t n_bytes;
     char buffer[BUFSIZE];
-    ssize_t n_bytes = read(fd, buffer, BUFSIZE);
-    if (-1 == n_bytes)
+    for (int i = 0; (i <= ctx->maxi) && (ctx->nready > 0); ++i)
     {
-        error_exit("read()");
-    } 
-    else if (0 == n_bytes)
-    {
-        printf("[+] Closing connection\n");
-        close(fd);
-        return false;
-    }
-
-    if (write(fd, buffer, n_bytes) != n_bytes)
-    {
-        error_exit("write()");
-    }
-
-    return true;
-}
-
-static int process_ready_descriptors(fd_set* readfds, int nfds, const int sfd)
-{
-    for (int fd = 0; fd < nfds; ++fd)
-    {
-        if (!FD_ISSET(fd, readfds))
+        int cfd = ctx->clientfd[i];
+        if ((cfd > 0) && FD_ISSET(cfd, &ctx->ready_set))
         {
-            continue;
-        }
-
-        if (sfd == fd)
-        {
-            int cfd = handle_accept_ready(fd);
-            FD_SET(cfd, readfds);
-            FD_SET(sfd, readfds);
-            nfds = max(nfds, cfd);
-            printf("new nfds: %d\n", nfds);
-        }
-        else 
-        {
-            if (handle_read_ready(fd))
+            // process IO on the ready client connection
+            ctx->nready--;
+            if ((n_bytes = read(cfd, buffer, BUFSIZE)) > 0)
             {
-                FD_SET(fd, readfds);
+                if (write(cfd, buffer, n_bytes) != n_bytes)
+                {
+                    error_exit("write()");
+                }
+            }
+            else
+            {
+                // close the connection
+                close(cfd);
+                FD_CLR(cfd, &ctx->read_set);
+                ctx->clientfd[i] = -1;
             }
         }
     }
-
-    return nfds;
 }
 
 int main(void)
 {
+    static server_ctx_t ctx;
+
+    socklen_t addrlen = sizeof(struct sockaddr_in);
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(struct sockaddr_in));
+
     int sfd = server_socket(SERVER_PORT);
     if (-1 == sfd)
     {
@@ -114,26 +142,37 @@ int main(void)
     // make the listening socket nonblocking
     set_nonblocking(sfd);
 
-    // nfds must be 1 greater than maximum fd in set
-    int nfds = sfd + 1;
-
-    // only interested in read events
-    fd_set readfds;
-    FD_ZERO(&readfds);
+    // initialize the server context
+    initialize_server_ctx(&ctx, sfd);
 
     printf("[+] Listening on port %s\n", SERVER_PORT);
-    
-    FD_SET(sfd, &readfds);
+
     for (;;)
     {
-        // wait for a read event
-        int n_ready = select(nfds, &readfds, NULL, NULL, NULL);
-        if (-1 == n_ready)
+        // re-initialize the ready set
+        ctx.ready_set = ctx.read_set;
+
+        // wait for events
+        ctx.nready = select(ctx.maxfd + 1, &ctx.ready_set, NULL, NULL, NULL);
+        if (-1 == ctx.nready)
         {
             error_exit("select()");
         }
 
-        nfds = process_ready_descriptors(&readfds, nfds, sfd);
+        if (FD_ISSET(sfd, &ctx.ready_set))
+        {
+            // accept a new client connection
+            int cfd = accept(sfd, (struct sockaddr*)&addr, &addrlen);
+            if (-1 == cfd)
+            {
+                error_exit("accept()");
+            }
+
+            add_client(cfd, &ctx);
+        }
+
+        // process all clients that are ready for IO
+        process_ready_clients(&ctx);
     }
 
     close(sfd);
