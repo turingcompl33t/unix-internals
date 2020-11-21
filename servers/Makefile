@@ -29,6 +29,8 @@ prethreaded: common
 select: common
 	$(CC) $(CFLAGS) -o select -I$(LOCAL_HDRS) select.c util.c $(LOCAL_LIBS)/common.a
 
+poll: common
+	$(CC) $(CFLAGS) -o poll -I$(LOCAL_HDRS) poll.c util.c $(LOCAL_LIBS)/common.a
 
 common:
 	$(MAKE) -C $(LOCAL_LIBS)
@@ -42,6 +44,7 @@ clean:
 	rm -f threaded
 	rm -f prethreaded
 	rm -f select
+	rm -f poll
 	$(MAKE) -C $(LOCAL_LIBS) clean
 
 .PHONY: clean
