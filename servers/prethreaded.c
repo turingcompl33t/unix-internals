@@ -1,4 +1,4 @@
-// prethreaded1.c
+// prethreaded.c
 //
 // A concurrent echo server that utilizes a pre-allocated pool 
 // of worker threads to manage concurrent client connections.

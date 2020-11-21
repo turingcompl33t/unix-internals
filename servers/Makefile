@@ -23,8 +23,12 @@ preforking: common
 threaded: common
 	$(CC) $(CFLAGS) -o threaded -pthread -I$(LOCAL_HDRS) threaded.c util.c $(LOCAL_LIBS)/common.a
 
-prethreaded1: common
-	$(CC) $(CFLAGS) -o prethreaded1 -pthread -I$(LOCAL_HDRS) prethreaded1.c util.c $(LOCAL_LIBS)/common.a
+prethreaded: common
+	$(CC) $(CFLAGS) -o prethreaded -pthread -I$(LOCAL_HDRS) prethreaded.c util.c $(LOCAL_LIBS)/common.a
+
+select: common
+	$(CC) $(CFLAGS) -o select -I$(LOCAL_HDRS) select.c util.c $(LOCAL_LIBS)/common.a
+
 
 common:
 	$(MAKE) -C $(LOCAL_LIBS)
@@ -36,7 +40,8 @@ clean:
 	rm -f forking
 	rm -f preforking
 	rm -f threaded
-	rm -f prethreaded1
+	rm -f prethreaded
+	rm -f select
 	$(MAKE) -C $(LOCAL_LIBS) clean
 
 .PHONY: clean
