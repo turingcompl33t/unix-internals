@@ -14,6 +14,12 @@ dup1: common
 share1: common
 	$(CC) $(CFLAGS) -o share1 -I$(LOCAL_HDRS) share1.c $(LOCAL_LIBS)/common.a
 
+open1: common
+	$(CC) $(CFLAGS) -o open1 -I$(LOCAL_HDRS) open1.c $(LOCAL_LIBS)/common.a
+
+open2: common
+	$(CC) $(CFLAGS) -o open2 -I$(LOCAL_HDRS) open2.c $(LOCAL_LIBS)/common.a
+
 hole: common
 	$(CC) $(CFLAGS) -o hole -I$(LOCAL_HDRS) hole.c $(LOCAL_LIBS)/common.a
 
@@ -24,6 +30,8 @@ clean:
 	rm -f *.o
 	rm -f dup1
 	rm -f share1
+	rm -f open1
+	rm -f open2
 	rm -f hole
 	$(MAKE) -C $(LOCAL_LIBS) clean
 
