@@ -20,6 +20,9 @@ redirect1:
 fork-file-sharing: common
 	$(CC) $(CFLAGS) -o fork-file-sharing -I$(LOCAL_HDRS) fork_file_sharing.c $(LOCAL_LIBS)/common.a
 
+environ: common
+	$(CC) $(CFLAGS) -o environ -I$(LOCAL_HDRS) environ.c $(LOCAL_LIBS)/common.a
+
 common:
 	$(MAKE) -C $(LOCAL_LIBS)
 
@@ -29,6 +32,7 @@ clean:
 	rm -f fork2
 	rm -f redirect1
 	rm -f fork-file-sharing
+	rm -f environ
 	$(MAKE) -C $(LOCAL_LIBS) clean
 
 
