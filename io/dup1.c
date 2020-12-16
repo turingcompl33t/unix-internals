@@ -1,4 +1,4 @@
-// dup.c
+// dup1.c
 //
 // File descriptor duplication with dup()
 
@@ -15,8 +15,7 @@ char buffer[] = "abcde12345";
 int main(void)
 {
     int fd1;
-    if ((fd1 = open("test.txt", O_WRONLY | O_CREAT | O_TRUNC)) == -1)
-    {
+    if ((fd1 = open("test.txt", O_WRONLY | O_CREAT | O_TRUNC)) == -1) {
         error_exit("open");
     }
 
@@ -27,8 +26,7 @@ int main(void)
     assert(lseek(fd1, 0, SEEK_CUR) == 0);
     assert(lseek(fd2, 0, SEEK_CUR) == 0);
 
-    if (write(fd1, buffer, 10) != 10)
-    {
+    if (write(fd1, buffer, 10) != 10) {
         error_exit("write()");
     }
 
@@ -36,8 +34,7 @@ int main(void)
     assert(lseek(fd1, 0, SEEK_CUR) == 10);
     assert(lseek(fd2, 0, SEEK_CUR) == 10);
 
-    if (write(fd2, buffer, 10) != 10)
-    {
+    if (write(fd2, buffer, 10) != 10) {
         error_exit("write()");
     }
 
