@@ -20,11 +20,23 @@ struct1:
 struct2:
 	$(CC) $(CFLAGS) -o struct2 -I$(LOCAL_HDRS) struct2.c
 
+stack1:
+	$(CC) $(CFLAGS) -o stack1 -I$(LOCAL_HDRS) stack1.c
+
+stack2:
+	$(CC) $(CFLAGS) -o stack2 -I$(LOCAL_HDRS) stack2.c
+
+array1:
+	$(CC) $(CFLAGS) -o array1 -I$(LOCAL_HDRS) array1.c
+
 clean:
 	rm -f *.o
 	rm -f local-static1
 	rm -f local-static2
 	rm -f struct1
 	rm -f struct2
+	rm -f stack1
+	rm -f stack2
+	rm -f array1
 
 .PHONY: clean
