@@ -15,7 +15,7 @@
 
 static size_t count = 0;
 
-void* worker(void *arg) {
+static void* worker(void *arg) {
     sem_t *lock = (sem_t*)arg;
 
     for (size_t i = 0; i < N_OPS; ++i) {
