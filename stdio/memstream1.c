@@ -6,10 +6,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFSIZE 48
+#include "core.h"
 
-int main(void)
-{
+#define BUFSIZE (48)
+
+int main(void) {
     FILE* fp;
     char buffer[BUFSIZE];
 
@@ -17,10 +18,9 @@ int main(void)
     buffer[BUFSIZE - 2] = '\0';
     buffer[BUFSIZE - 1] = 'X';
 
-    if ((fp = fmemopen(buffer, BUFSIZE, "w+")) == NULL)
-    {
-        puts("fmemopen() failed");
-        return 1;
+    if ((fp = fmemopen(buffer, BUFSIZE, "w+")) == NULL) {
+        error_exit("fmemopen()");
+        return EXIT_FAILURE;
     }
 
     // fmemopen() places null at buffer beginning

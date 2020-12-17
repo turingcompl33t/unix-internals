@@ -20,8 +20,8 @@ buffering3: common
 buffering4: common
 	$(CC) $(CFLAGS) -o buffering4 -I$(LOCAL_HDRS) buffering4.c $(LOCAL_LIBS)/common.a
 
-memstream1:
-	$(CC) $(CFLAGS) -o memstream1 memstream1.c
+memstream1: common
+	$(CC) $(CFLAGS) -o memstream1 -I$(LOCAL_HDRS) memstream1.c $(LOCAL_LIBS)/common.a
 
 common:
 	$(MAKE) -C $(LOCAL_LIBS)
