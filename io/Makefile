@@ -14,6 +14,9 @@ dup1: common
 dup2: common
 	$(CC) $(CFLAGS) -o dup2 -I$(LOCAL_HDRS) dup2.c $(LOCAL_LIBS)/common.a
 
+dup3: common
+	$(CC) $(CFLAGS) -o dup3 -I$(LOCAL_HDRS) dup3.c $(LOCAL_LIBS)/common.a
+
 share1: common
 	$(CC) $(CFLAGS) -o share1 -I$(LOCAL_HDRS) share1.c $(LOCAL_LIBS)/common.a
 
@@ -39,6 +42,7 @@ clean:
 	rm -f *.o
 	rm -f dup1
 	rm -f dup2
+	rm -f dup3
 	rm -f share1
 	rm -f open1
 	rm -f open2
